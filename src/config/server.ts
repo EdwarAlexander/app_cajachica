@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, { Express, json } from 'express';
 import connection from './sequelize';
 import conceptoRouter from '../routes/concepto.route';
 
@@ -12,7 +12,12 @@ export default class Server {
     constructor() {
         this.app = express();
         this.port = port_server;
+        this.bodyParser();
         this.router();
+    }
+
+    private bodyParser() {
+        this.app.use(json());
     }
 
     private router() {

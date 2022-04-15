@@ -30,6 +30,76 @@ const saveConcepto = async (req: Request, res: Response) => {
     }
 }
 
+const listConceptoAll = async (req: Request, res: Response) => {
+    try {
+        const concepto = await Concepto.findAll({
+            order: [
+                ["fecharegistro", "desc"]
+            ]
+        });
+        return res.status(200).json({
+            content: concepto,
+            message: "listing concepto"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            content: null,
+            message: "error listing concepto"
+        });
+    }
+}
+
+const listConceptoActive = async (req: Request, res: Response) => {
+    try {
+        const concepto = await Concepto.findAll({
+            where: { estadoConcepto: 1 },
+            order: [
+                ["nombreConcepto", "asc"]
+            ]
+        });
+        return res.status(200).json({
+            content: concepto,
+            message: "listing concepto active"
+        });
+    } catch (error) {
+        res.status(500).json({
+            content: null,
+            message: "error listing concepto active"
+        })
+    }
+}
+
+const deleteConcepto = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const data = await Concepto.update({
+            estadoConcepto: 0
+        }, {
+            where: { idConcepto: id }
+        }
+        );
+        const total = data[0];
+        if (total === 0) {
+            return res.status(400).json({
+                content: null,
+                message: "not concepto to update found"
+            });
+        }
+        return res.status(200).json({
+            content: null,
+            message: "concepto updated"
+        });
+    } catch (error) {
+        res.status(500).json({
+            content: null,
+            message: "error delete concepto"
+        })
+    }
+}
+
 export {
-    saveConcepto
+    saveConcepto,
+    listConceptoActive,
+    listConceptoAll,
+    deleteConcepto
 }
