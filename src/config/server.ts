@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import connection from './sequelize';
+import conceptoRouter from '../routes/concepto.route';
 
 
 const port_server = Number(process.env.PORT_SERVER);
@@ -11,6 +12,11 @@ export default class Server {
     constructor() {
         this.app = express();
         this.port = port_server;
+        this.router();
+    }
+
+    private router() {
+        this.app.use(conceptoRouter);
     }
 
     start() {
